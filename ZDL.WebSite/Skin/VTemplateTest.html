@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+    <div class="bloglog">
+        <strong>{$:blogarchive.title htmlencode="true"}</strong>
+
+        <hr class="blogsplit" />  {$:blogarchive.content}  <div style="margin-bottom: 20px" align="right">posted @ {$:blogarchive.time format="yyyy-MM-dd HH:mm"} {$:blogarchive.author htmlencode="true"} 阅读(1) 评论(2)</div>
+
+        <strong>评论列表</strong>
+        <vt:foreach from="$blogarchive.comments" item="#.comment" index="#.floor">
+            <hr class="blogsplit" />
+            <vt:if var="#.floor.iseven" value="true">
+                <div class="blogcomment evenfloor">#{$:#.floor}楼 {$:#.comment.time format="yyyy-MM-dd HH:mm"} | {$:#.comment.author htmlencode="true"} </div> <div style="padding-left: 20px">{$:#.comment.content htmlencode="true"}</div>
+                <vt:else />
+                <div class="blogcomment">#{$:#.floor}楼 {$:#.comment.time format="yyyy-MM-dd HH:mm"} | {$:#.comment.author htmlencode="true"} </div> <div style="padding-left: 20px">{$:#.comment.content htmlencode="true"}</div>
+            </vt:if>
+        </vt:foreach>
+
+    </div>
+
+
+    <table width="100%" border="1">
+        <tr>
+            <td>Id</td>
+            <td>姓名</td>
+            <td>等级</td>
+            <td>城市</td>
+            <td>省份</td>
+        </tr>
+        <vt:foreach from="$users" item="user"> 
+            <tr>
+                <td>{$:user.id}</td>
+                <td>{$:user.name}</td>            
+            </tr>
+        </vt:foreach>
+    </table>
+</body>
+</html>

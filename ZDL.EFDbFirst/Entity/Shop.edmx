@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TxoooCloudModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Z_Goods">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="barcode" Type="varchar" MaxLength="50" />
+          <Property Name="goodsType" Type="int" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="isAudit" Type="bit" />
+          <Property Name="isEnabled" Type="bit" />
+          <Property Name="add_time" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Z_GoodsOrder">
+          <Key>
+            <PropertyRef Name="order_id" />
+          </Key>
+          <Property Name="order_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="goods_id" Type="int" />
+          <Property Name="buyer" Type="varchar" MaxLength="50" />
+          <Property Name="buy_time" Type="datetime" />
+        </EntityType>
+        <EntityContainer Name="TxoooCloudModelStoreContainer">
+          <EntitySet Name="Z_Goods" EntityType="Self.Z_Goods" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Z_GoodsOrder" EntityType="Self.Z_GoodsOrder" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TxoooCloudModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Z_Goods">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="barcode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="goodsType" Type="Int32" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="isAudit" Type="Boolean" />
+          <Property Name="isEnabled" Type="Boolean" />
+          <Property Name="add_time" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Z_Goods" EntityType="Self.Z_Goods" />
+          <EntitySet Name="Z_GoodsOrder" EntityType="TxoooCloudModel.Z_GoodsOrder" />
+        </EntityContainer>
+        <EntityType Name="Z_GoodsOrder">
+          <Key>
+            <PropertyRef Name="order_id" />
+          </Key>
+          <Property Name="order_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="goods_id" Type="Int32" />
+          <Property Name="buyer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="buy_time" Type="DateTime" Precision="3" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TxoooCloudModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Z_Goods">
+            <EntityTypeMapping TypeName="TxoooCloudModel.Z_Goods">
+              <MappingFragment StoreEntitySet="Z_Goods">
+                <ScalarProperty Name="add_time" ColumnName="add_time" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="barcode" ColumnName="barcode" />
+                <ScalarProperty Name="goodsType" ColumnName="goodsType" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="isAudit" ColumnName="isAudit" />
+                <ScalarProperty Name="isEnabled" ColumnName="isEnabled" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Z_GoodsOrder">
+            <EntityTypeMapping TypeName="TxoooCloudModel.Z_GoodsOrder">
+              <MappingFragment StoreEntitySet="Z_GoodsOrder">
+                <ScalarProperty Name="buy_time" ColumnName="buy_time" />
+                <ScalarProperty Name="buyer" ColumnName="buyer" />
+                <ScalarProperty Name="goods_id" ColumnName="goods_id" />
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

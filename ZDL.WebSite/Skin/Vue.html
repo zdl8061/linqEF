@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link href="//cdn.txooo.com/public/bootstrap/css/bootstrap.min.css" rel="stylesheet">    
+    <script type="text/javascript" src="//cdn.txooo.com/public/jquery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="//cdn.txooo.com/public/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdn.txooo.com/public/vuejs/vue.min.js"></script>
+    <script type="text/javascript" src="//cdn.txooo.com/public/vuejs/vue-animated-list.js"></script>    
+    <script type="text/javascript" src="//cdn.txooo.com/public/laypage/laypage.js"></script>
+    <script type="text/javascript" src="//cdn.txooo.com/public/jquery.validate/jquery.validate.js"></script>
+    <script type="text/javascript" src="//cdn.txooo.com/public/jquery.validate/validate-ex.js"></script>
+
+    <script>
+        $.ajaxSetup({ cache: false, contentType: "application/x-www-form-urlencoded; charset=utf-8", error: function () { } });
+
+        $(function () {
+
+            var goods = new Vue({
+                el: '#goods',
+                data: {
+                    list: []
+                },
+                methods: {
+
+                    showData: function (curr, pagesize) {
+                        var _self = this;
+                        $.getJSON("/ZDL/EFDbFirst/Ajax/GoodsAjax.ajax/GetList", { page: curr || 1, pagesize: pagesize || 5 }, function (res) {
+                            _self.list = res.rows;
+                            laypage({
+                                cont: 'pageBar',
+                                pages: res.pages,
+                                skin: 'molv',
+                                curr: curr || 1,
+                                jump: function (obj, first) {
+                                    if (!first) {
+                                        _self.showData(obj.curr);
+                                    }
+                                }
+                            });
+                        });
+                    },
+
+                    onOffLine: function (item) {
+                        var _self = this;
+                        $.getJSON("/ZDL/EFDbFirst/Ajax/GoodsAjax.ajax/OnOffLine", { id: item.id, isEnabled: !item.isEnabled }, function (res) {
+                            if (res.result) {
+                                item.isEnabled = !item.isEnabled;
+                            }
+                        });
+                    },
+                    delete: function (item) {
+                        var _self = this;
+                        $.getJSON("/ZDL/EFDbFirst/Ajax/GoodsAjax.ajax/Delete", { id: item.id }, function (res) {
+                            if (res.result) {
+                                _self.list = $.grep(_self.list, function (cur, i) {
+                                    return cur.id != item.id;
+                                });
+                            }
+                        });
+                    },
+                    add: function () {
+                        var _self = this;
+                        if (!$("#myform").valid())
+                            return;
+
+                        $.post("/ZDL/EFDbFirst/Ajax/GoodsAjax.ajax/Add", $("#myform").serialize(), function (res) {
+
+                            res = JSON.parse(res);
+                            if (res.result) {
+                                _self.list.splice(0, 0, res.rows);
+                            }
+                        });
+                    }
+                },
+                ready: function () {
+                    this.showData();
+                }
+            });
+
+            Vue.filter('isAuth', function (value) {
+                if (value) {
+                    return "已通过";
+                }
+                else return "未通过";
+            });
+
+            Vue.filter('isLine', function (value) {
+                if (value) {
+                    return "在线";
+                }
+                else return "已下线";
+            });
+
+            Vue.filter('goodsType', function (value) {
+                if (value == "1") {
+                    return "餐饮";
+                }
+                else return "美容";
+            });
+
+        });
+    </script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        
+        .data-transition {
+            transition: opacity .5s ease;
+        }
+
+        .data-enter {
+            opacity: 0;
+        }
+        .data-leave {
+            opacity: 0;
+            display:none;
+            position: absolute; 
+        }
+      
+    </style>
+</head>
+<body>
+    <div id="goods" class="container" v-cloak>
+        <h1>测试列表</h1>       
+        <div>
+            <table id="table" class="table table-hover">
+                <tr v-for="data in list" transition="data">
+                    <td>{{data.id}}</td>
+                    <td>{{data.barcode}}</td>
+                    <td>{{data.goodsType | goodsType}}</td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.isAudit | isAuth}}</td>
+                    <td>{{data.isEnabled | isLine}}</td>
+                    <td><input type="button" v-on:click="delete(data)" value="删除" class="btn btn-danger" /> <br><br></td>
+                    <td><input type="button" v-on:click="onOffLine(data)" value="{{data.isEnabled ? '下线' :'上线' }}" class="btn btn-primary"/></td>
+                </tr>
+            </table>
+            <div id="pageBar"></div>
+        </div>
+
+        <br><br>
+
+        <div>
+            <br>
+            <form id="myform">                
+                <div class="form-group">
+                    <label>编号</label>
+                    <input type="text" name="barcode" value="C3423C" class="form-control {required:true}" />
+                </div>
+                <div class="form-group">
+                    <label>名称</label>
+                    <input type="text" name="name" value="麻辣空间" class="form-control {required:true}" />
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" value="2" name="goodsType" checked="checked" class="form-control" />
+                        美容
+                    </label>
+                </div>  
+                <div class="radio">
+                    <label>
+                        <input type="radio" value="1" name="goodsType" class="form-control" />
+                        餐饮
+                    </label>
+                </div>                        
+                <input type="button" v-on:click="add" value="添加" class="btn btn-default" />            
+            </form>            
+        </div>
+        <br><br>
+    </div>
+</body>
+</html>
